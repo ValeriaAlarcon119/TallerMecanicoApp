@@ -6,11 +6,11 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),  // Asegúrate de tener este archivo o elimina esta línea si no lo necesitas
+      preload: path.join(__dirname, 'preload.js'),  
     },
   });
 
-  // Cargar la app de React en el servidor local
+  
   win.loadURL('http://localhost:3000');
 }
 

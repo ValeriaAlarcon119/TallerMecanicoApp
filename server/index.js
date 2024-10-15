@@ -2,27 +2,26 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const pool = require('./db'); // Asegúrate de que tengas este archivo configurado para tu conexión a la base de datos.
+const pool = require('./db'); 
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const app = express();
-const port = process.env.PORT || 5000; // Usar el puerto definido en las variables de entorno
+const port = process.env.PORT || 5000; 
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
 
-// Configuración de Nodemailer
+
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Cambia si usas otro servicio
+    service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Usa la variable de entorno
-        pass: process.env.EMAIL_PASS  // Usa la variable de entorno
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS  
     }
 });
 
-// Rutas CRUD para Servicios
-// Crear servicio
+
 app.post('/servicios', async (req, res) => {
     try {
         const { descripcion, precio } = req.body;
@@ -37,7 +36,7 @@ app.post('/servicios', async (req, res) => {
     }
 });
 
-// Obtener todos los servicios
+
 app.get('/servicios', async (req, res) => {
     try {
         const allServicios = await pool.query('SELECT * FROM servicios');
@@ -48,7 +47,7 @@ app.get('/servicios', async (req, res) => {
     }
 });
 
-// Actualizar servicio
+
 app.put('/servicios/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -64,7 +63,7 @@ app.put('/servicios/:id', async (req, res) => {
     }
 });
 
-// Eliminar servicio
+
 app.delete('/servicios/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -80,20 +79,20 @@ app.post('/contact', async (req, res) => {
     const { nombre, email, telefono, mensaje } = req.body;
 
     try {
-        // Guardar en la base de datos
+        
         const newContacto = await pool.query(
             'INSERT INTO contactos (nombre, email, telefono, mensaje) VALUES ($1, $2, $3, $4) RETURNING *',
             [nombre, email, telefono, mensaje]
         );
 
-        res.status(200).json(newContacto.rows[0]); // Devuelve el nuevo contacto
+        res.status(200).json(newContacto.rows[0]); 
     } catch (error) {
         console.error('Error guardando el contacto:', error);
         res.status(500).send('Error al guardar el contacto');
     }
 });
 
-// Obtener todos los contactos
+
 app.get('/contact', async (req, res) => {
     try {
         const allContactos = await pool.query('SELECT * FROM contactos');
@@ -104,7 +103,7 @@ app.get('/contact', async (req, res) => {
     }
 });
 
-// Actualizar contacto
+
 app.put('/contact/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -120,7 +119,7 @@ app.put('/contact/:id', async (req, res) => {
     }
 });
 
-// Eliminar contacto
+
 app.delete('/contact/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -132,7 +131,6 @@ app.delete('/contact/:id', async (req, res) => {
     }
 });
 
-// Iniciar el servidor
 app.listen(port, () => {
     console.log(`Servidor en ejecución en el puerto ${port}`);
 });
